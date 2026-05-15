@@ -1,0 +1,75 @@
+{% extends 'todos/base.html' %}
+{% block title %}{% if form.instance.pk %}Edit Todo{% else %}Create Todo{% endif %}{% endblock %}
+{% block extra_css %}
+<style>
+ .form-group {
+ margin-bottom: 20px;
+ }
+ .form-group label {
+ display: block;
+ margin-bottom: 8px;
+ font-weight: 600;
+ color: #333;
+ }
+ .form-group input[type="text"],
+ .form-group textarea,
+ .form-group select {
+ width: 100%;
+ padding: 12px;
+ border: 2px solid #ddd;
+ border-radius: 5px;
+ font-size: 14px;
+ font-family: inherit;
+ }
+ .form-group input[type="checkbox"] {
+ margin-right: 8px;
+ cursor: pointer;
+ }
+ .form-group textarea {
+ min-height: 150px;
+ resize: vertical;
+ }
+ .form-group input:focus,
+ .form-group textarea:focus,
+ .form-group select:focus {
+ outline: none;
+ border-color: #667eea;
+ box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+ }
+ .form-actions {
+ margin-top: 30px;
+ display: flex;
+ gap: 10px;
+ }
+</style>
+{% endblock %}
+{% block content %}
+<h1>{% if form.instance.pk %}Edit Todo{% else %}Create New Todo{% endif %}</h1>
+<form method="post">
+ {% csrf_token %}
+ 
+ {% for field in form %}
+ <div class="form-group">
+ {% if field.widget.input_type == 'checkbox' %}
+ <label for="{{ field.id_for_label }}">
+ {{ field }}
+ {{ field.label }}
+ </label>
+ {% else %}
+ {{ field.label_tag }}
+ {{ field }}
+ {% endif %}
+ {% if field.errors %}
+ <div style="color: #f56565; margin-top: 5px;">
+ {{ field.errors }}
+ </div>
+ {% endif %}
+ </div>
+ {% endfor %}
+
+ <div class="form-actions">
+ <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Update Todo{% else %}Create Todo{% endif %}</button>
+ <a href="{% url 'todo_list' %}" class="btn" style="background: #ddd; color: #333;">Cancel</a>
+ </div>
+</form>
+{% endblock %}
